@@ -1,15 +1,51 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+import java.util.Scanner;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+public class Main {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите математическую операцию (например 1 + 2): ");
+        String inputText = scanner.nextLine();
+        System.out.println("Результат: " + calc(inputText));
+
+    }
+
+    static String findOperator(String inputText) throws Exception {
+        if (inputText.contains("+")) return "+";
+        else if (inputText.contains("-")) return "-";
+        else if (inputText.contains("*")) return "*";
+        else if (inputText.contains("/")) return "/";
+        else throw new Exception("неверный оператор");
+    }
+
+    public static int calc(String inputText) throws Exception {
+        int num1, num2, result;
+        String operator;
+
+        inputText = inputText.replaceAll(" ", ""); // удаляем все пробелы
+
+        String[] nums = inputText.split("[+\\-*/]"); // делим введенную строку регулярным выражением
+        if (nums.length != 2) {
+            throw new Exception("должно быть два числа и оператор (+, -, *, /)");
         }
+
+        num1 = Integer.parseInt(nums[0]); // находим первое число
+        num2 = Integer.parseInt(nums[1]); // находим второе число
+        operator = findOperator(inputText); // находим оператор
+
+        result = switch (operator) { // производим вычисление результата
+            case "+" -> num1 + num2;
+            case "-" -> num1 - num2;
+            case "*" -> num1 * num2;
+            case "/" -> {
+                if (num2 == 0) {
+                    throw new Exception("деление на ноль");
+                }
+                yield num1 / num2;
+            }
+            default -> throw new Exception("неверная математическая операция");
+        };
+
+        return result;
+
     }
 }

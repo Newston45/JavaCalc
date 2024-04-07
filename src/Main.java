@@ -17,18 +17,15 @@ public class Main {
         else throw new Exception("неверный оператор");
     }
 
-    static boolean checkValue(int num) throws Exception {
-        if (num >= 1 && num <= 10) return true;
-        else throw new Exception("число должно быть больше 1 и меньше 10");
+    static void checkValue(int num) throws Exception {
+        if ((num < 1) || (num > 10)) {
+            throw new Exception("вводимые числа не могут быть меньше 1 и больше 10");
+        }
     }
 
-    static boolean isArabic(String inputText) throws Exception {
-        return true;
-    }
-
-    public static int calc(String inputText) throws Exception {
-        int num1 = 0, num2 = 0, result;
-        String operator;
+    public static String calc(String inputText) throws Exception {
+        int num1 = 0, num2 = 0, resultArabic;
+        String operator, result;
         boolean twoNumsIsRoman = false;
 
         inputText = inputText.replaceAll(" ", ""); // удаляем все пробелы
@@ -45,22 +42,19 @@ public class Main {
         } else if (!(Roman.isRomanNum(nums[0])) && !(Roman.isRomanNum(nums[1]))) {
             num1 = Integer.parseInt(nums[0]); // находим первое число
             num2 = Integer.parseInt(nums[1]); // находим второе число
-            twoNumsIsRoman = false;
         } else if ((Roman.isRomanNum(nums[0])) && !(Roman.isRomanNum(nums[1]))) {
             throw new Exception("разные системы исчисления");
         } else if (!(Roman.isRomanNum(nums[0])) && (Roman.isRomanNum(nums[1]))) {
             throw new Exception("разные системы исчисления");
         }
 
-
-
-
         checkValue(num1);
         checkValue(num2);
 
         operator = findOperator(inputText); // находим оператор
 
-        result = switch (operator) { // производим вычисление результата
+
+        resultArabic = switch (operator) { // производим вычисление результата
             case "+" -> num1 + num2;
             case "-" -> num1 - num2;
             case "*" -> num1 * num2;
@@ -74,16 +68,18 @@ public class Main {
         };
 
         if (twoNumsIsRoman) {
-
+            result = Roman.convertToRomanNum(resultArabic);
+            return result;
         }
-
+        result = Integer.toString(resultArabic);
         return result;
 
     }
 }
 
 class Roman {
-    static String[] romanNums = new String[] {"0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "L", "C"};
+    static String[] romanNums = new String[] {"C", "L", "X", "IX", "VIII", "VII", "VI", "V", "IV", "III", "II", "I"};
+    static int[] arabicNums = new int[] {100, 50, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
 
     public static boolean isRomanNum(String num) {
         for (String romanNum : romanNums) {
@@ -94,14 +90,20 @@ class Roman {
 
     public static int convertToArabNum(String num) {
         for (int i = 0; i < romanNums.length; i++) {
-            if (romanNums[i].equals(num)) return i;
+            if (romanNums[i].equals(num)) {
+                return arabicNums[i];
+            }
         }
         return -1;
     }
-//    public static String convertToRomanNum(int num) {
-//        StringBuilder romanNum = new StringBuilder();
-//        for (int i = 0; i < romanNums.length; i++) {
-//            for
-//        }
-//    }
+    public static String convertToRomanNum(int num) {
+    StringBuilder romanNum = new StringBuilder();
+    for (int i = 0; i < arabicNums.length; i++) {
+        while (num >= arabicNums[i]) {
+            romanNum.append(romanNums[i]);
+            num -= arabicNums[i];
+        }
+    }
+    return romanNum.toString();
+    }
 }

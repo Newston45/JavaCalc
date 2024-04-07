@@ -9,7 +9,7 @@ public class Main {
 
     }
 
-    static String findOperator(String inputText) throws Exception {
+    private static String findOperator(String inputText) throws Exception {
         if (inputText.contains("+")) return "+";
         else if (inputText.contains("-")) return "-";
         else if (inputText.contains("*")) return "*";
@@ -17,29 +17,29 @@ public class Main {
         else throw new Exception("неверный оператор");
     }
 
-    static void checkValue(int num) throws Exception {
+    private static void checkValue(int num) throws Exception {
         if ((num < 1) || (num > 10)) {
             throw new Exception("вводимые числа не могут быть меньше 1 и больше 10");
         }
     }
 
-    public static String calc(String inputText) throws Exception {
+    public static String calc(String input) throws Exception {
         int num1 = 0, num2 = 0, resultArabic;
         String operator, result;
         boolean twoNumsIsRoman = false;
 
-        inputText = inputText.replaceAll(" ", ""); // удаляем все пробелы
+        input = input.replaceAll(" ", ""); // удаляем все пробелы
 
-        String[] nums = inputText.split("[+\\-*/]"); // делим введенную строку регулярным выражением
+        String[] nums = input.split("[+\\-*/]"); // делим введенную строку регулярным выражением
         if (nums.length != 2) {
             throw new Exception("должно быть два числа и оператор (+, -, *, /)");
         }
 
-        if ((Roman.isRomanNum(nums[0])) && (Roman.isRomanNum(nums[1]))) {
+        if ((Roman.isRomanNum(nums[0])) && (Roman.isRomanNum(nums[1]))) { // если числа римские то конверитруем в арабские
             num1 = Roman.convertToArabNum(nums[0]);
             num2 = Roman.convertToArabNum(nums[1]);
             twoNumsIsRoman = true;
-        } else if (!(Roman.isRomanNum(nums[0])) && !(Roman.isRomanNum(nums[1]))) {
+        } else if (!(Roman.isRomanNum(nums[0])) && !(Roman.isRomanNum(nums[1]))) { // если числа арабские то конверитруем в римские
             num1 = Integer.parseInt(nums[0]); // находим первое число
             num2 = Integer.parseInt(nums[1]); // находим второе число
         } else if ((Roman.isRomanNum(nums[0])) && !(Roman.isRomanNum(nums[1]))) {
@@ -50,9 +50,7 @@ public class Main {
 
         checkValue(num1);
         checkValue(num2);
-
-        operator = findOperator(inputText); // находим оператор
-
+        operator = findOperator(input); // находим оператор
 
         resultArabic = switch (operator) { // производим вычисление результата
             case "+" -> num1 + num2;
@@ -76,7 +74,6 @@ public class Main {
         }
         result = Integer.toString(resultArabic);
         return result;
-
     }
 }
 

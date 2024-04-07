@@ -68,6 +68,9 @@ public class Main {
         };
 
         if (twoNumsIsRoman) {
+            if (resultArabic < 1) {
+                throw new Exception("В римских числах нет отрицательных значений");
+            }
             result = Roman.convertToRomanNum(resultArabic);
             return result;
         }
